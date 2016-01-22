@@ -1,0 +1,48 @@
+{
+  "name": "NAMETemplate",
+  "version": "0.0.0",
+  "description": "Nodejs + Angularjs + Mongodb + Expressjs Template",
+  "main": "gulpfile.js",
+  "dependencies": {
+    "angular-cookies": "~1.4.7",
+    "angular": "~1.4.7",
+    "express": "~4.13.3",
+    "fs": "~0.0.2",
+    "gulp": "~3.9.0",
+    "body-parser": "~1.12.4",
+    "gulp-browserify": "~0.5.1",
+    "gulp-concat": "~2.6.0",
+    "gulp-livereload": "~3.8.1",
+    "gulp-sass": "~2.0.4",
+    "gulp-uglify": "~1.2.0",
+    "mongodb": "~1.4.39",
+    "path": "~0.11.14",
+    "gulp-sourcemaps": "~1.5.2",
+    "mongoose": "~4.2.6"
+  },
+  "devDependencies":  {
+    "angular-cookies": "~1.4.7",
+    "angular": "~1.4.7",
+    "express": "~4.13.3",
+    "fs": "~0.0.2",
+    "gulp": "~3.9.0",
+    "body-parser": "~1.12.4",
+    "gulp-browserify": "~0.5.1",
+    "gulp-concat": "~2.6.0",
+    "gulp-livereload": "~3.8.1",
+    "gulp-sass": "~2.0.4",
+    "gulp-uglify": "~1.2.0",
+    "mongodb": "~1.4.39",
+    "path": "~0.11.14",
+    "gulp-sourcemaps": "~1.5.2",
+    "mongoose": "~4.2.6"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://jrvboesch@bitbucket.org/jrvboesch/NAMEtemplate.git"
+  },
+  "author": "Juan Rodrigo Venegas Boesch"
+}
