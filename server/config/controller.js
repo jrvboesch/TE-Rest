@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
     Schema = mongoose.Schema;
 
 var controller = function(app) {
-    var db = mongoose.connect('mongodb://localhost/userExample');
+    var db = mongoose.connect('mongodb://localhost/TE-REST');
 
     //get Example
     app.get('/getUser/:lookup', function(req, res){
