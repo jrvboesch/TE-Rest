@@ -21,7 +21,7 @@ module.exports = (app, User) => {
     });
 
     app.delete('/users', (req, res) => {
-    	User.remove(req.body._id, err => {
+    	User.findByIdAndRemove(req.body._id, err => {
         	res.json(err ? err : 'Bien.');
         });
     });
