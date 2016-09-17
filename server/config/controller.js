@@ -6,10 +6,8 @@ var mongoose = require('mongoose');
 var controller = function(app) {
     var db = mongoose.connect('mongodb://localhost/TE-REST');
 
+    require('./users')(app, model.Users.schema);
 
 };
 
 module.exports = controller;
-
-
-
