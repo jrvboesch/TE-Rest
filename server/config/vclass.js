@@ -1,70 +1,143 @@
-
-var controller = function(app) {
-    // VClass CRUD's
+var util = require('./utilities');
+var virtualClass = function(app) {
+    // virtualClass CRUD's
     // Create
     app.post('/vclass', function(req, res){
-        var vclass = new model.VClass.schema({
-            name:               eq.body.name,
-            users:              [],
-            teacher:            eq.body.teacher,
-            CoverImg:           eq.body.CoverImg,
-            previewImg:         eq.body.previewImg,
-            previewDescription: eq.body.previewDescription,
-            description:        eq.body.description,
-            youtubeUrl:         "",
-            active:             false
-        });
 
-        mongoose.model(model.VClass.name).add(vclass, function(err,data){
+        var Vclass = {
+            name:               req.body.name,
+            users:              [],
+            teacher:            req.body.teacher,
+            coverImg:           req.body.CoverImg,
+            previewImg:         req.body.previewImg,
+            previewDescription: req.body.previewDescription,
+            description:        req.body.description,
+            youtubeUrl:         "",
+            active:             true
+        };
+        model.VClass.schema.create(Vclass, function(err,vclass){
             if (err){
                 console.log(err);
-                res.json(util.response(data,err));
+                res.json(util.response(vclass,err));
             }else{
-                res.json(util.response(data));
+                res.json(util.response(vclass));
             }
         });
     });
     // read
-    app.post('/vclass/:vclass', function(req, res){
-        
+    app.get('/vclass/:vclass?', function(req, res){
+
         if(!!req.params.vclass){
-            mongoose.model(model.User.name).find({_id: vclass}, function(err, vclass){
-                
-                res.json(util.response(vclass));
+            model.VClass.schema.findById(req.params.vclass, function(err, vclass){
+                if (err){
+                    console.log(err);
+                    res.json(util.response(vclass,err));
+                }else{
+                    res.json(util.response(vclass));
+                }
             });
         }else{
-            mongoose.model(model.User.name).find({}, function(err, vclass){
-
-                res.json(util.response(vclass));
+            model.VClass.schema.find( function(err, vclass){
+                if (err){
+                    console.log(err);
+                    res.json(util.response(vclass,err));
+                }else{
+                    res.json(util.response(vclass));
+                }
             });
         }
     });
     // Update
-    app.post('/vclass/update/:vclass', function(req, res){
-        if(!!req.params.vclass){
-            mongoose.model(model.User.name).find({email: { $regex: '.*'+req.params.vclass+'.*', $options: 'i' }}, function(err, vclass) {
-                vclass.name =               eq.body.name,
-                vclass.users =              eq.body.users,
-                vclass.CoverImg =           eq.body.CoverImg,
-                vclass.previewImg =         eq.body.previewImg,
-                vclass.previewDescription = eq.body.previewDescription,
-                vclass.description =        eq.body.description,
-                vclass.active =             eq.body.active;
-
-                vclass.save();
-                res.json(util.response(vclass));
+    app.put('/vclass/', function(req, res){
+        if(!!req.body._id){
+             var Vclass = {
+                name:               req.body.name,
+                teacher:            req.body.teacher,
+                coverImg:           req.body.coverImg,
+                previewImg:         req.body.previewImg,
+                previewDescription: req.body.previewDescription,
+                description:        req.body.description
+            };
+            model.VClass.schema.findByIdAndUpdate(req.body._id, Vclass, function(err, vclass){
+                if (err){
+                    console.log(err);
+                    res.json(util.response(vclass,err));
+                }else{
+                    res.json(util.response(vclass));
+                }
             });
         }else{
-             res.status(404).sendFile( app.locals.root_path + '/views/404/index.html');
+            res.json(util.response(Vclass,"update error!"));
         }
     });
+
     // Delete
-    app.post('/vclass/remove/:vclass', function(req, res){
+    app.delete('/vclass/', function(req, res){
         
-        if(!!req.params.vclass){
-            //remove from db
+        if(!!req.body._id){
+            model.VClass.schema.findByIdAndRemove(req.body._id,function(err, vclass){
+                if (err){
+                    console.log(err);
+                    res.json(util.response(vclass,err));
+                }else{
+                    res.json(util.response(vclass));
+                }
+            });
+        }else{
+            res.json(util.response(vclass,"delete error!"));
+        }
+    });
+
+    // addUserToClass
+    app.put('/vclass/addUser', function(req, res){
+        if(!!req.body._id){
+            model.VClass.schema.findByIdAndUpdate(
+                req.body._id,
+                {$push: {"users":req.body.user }},
+                {safe: true, upsert: true, new : true},
+                function(err, vclass) {
+                    console.log(err);
+                    res.json(util.response(vclass));
+                }
+            );
+        }else{
+            res.json(util.response(vclass,"add User To Class error!"));
+        }
+    });
+
+    // removeUserToClass
+    app.put('/vclass/removeUser', function(req, res){
+        if(!!req.body._id){
+            model.VClass.schema.findByIdAndUpdate(
+                req.body._id,
+                {$pull: {"users":req.body.user }},
+                {safe: true, upsert: true, new : true},
+                function(err, vclass) {
+                    console.log(err);
+                    res.json(util.response(vclass));
+                }
+            );
+        }else{
+            res.json(util.response(vclass,"remove User To Class error!"));
+        }
+    });
+    
+    // Update url
+    app.put('/vclass/youtube', function(req, res){
+        if(!!req.body._id){
+
+            model.VClass.schema.findByIdAndUpdate(req.body._id, { "youtubeUrl": req.body.youtubeUrl }, function(err, vclass){
+                if (err){
+                    console.log(err);
+                    res.json(util.response(vclass,err));
+                }else{
+                    res.json(util.response(vclass));
+                }
+            });
+        }else{
+            res.json(util.response(vclass,"update youtube URL error!"));
         }
     });
 };
 
-module.exports = vclass;
+module.exports = virtualClass;
