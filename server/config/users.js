@@ -25,4 +25,17 @@ module.exports = (app, User) => {
         	res.json(err ? err : 'Bien.');
         });
     });
+
+    app.post('/users/login', (req, res) => {
+        User.findOne({ email: req.body.email }, (err, user) => {
+            if (err) res.json(err);
+
+            if (!user) res.json({ success: false, message: 'Usuario no existe.' });
+
+            else
+                res.json(user.password === req.body.password ? 
+                    user : { success: false, message: 'Clave incorrecta.' });
+        });
+    });
+
 };
