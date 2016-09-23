@@ -1,4 +1,5 @@
 var util = require('./utilities');
+
 var virtualClass = function(app) {
     // virtualClass CRUD's
     // Create
@@ -93,7 +94,12 @@ var virtualClass = function(app) {
         if(!!req.body._id){
             model.VClass.schema.findByIdAndUpdate(
                 req.body._id,
-                {$push: {"users":req.body.user }},
+                {$push: {
+                    "users":{
+                        "uid" :req.body.user,
+                        "passcode": "quepotente504"
+                    }
+                }},
                 {safe: true, upsert: true, new : true},
                 function(err, vclass) {
                     console.log(err);
@@ -110,20 +116,19 @@ var virtualClass = function(app) {
         if(!!req.body._id){
             model.VClass.schema.findByIdAndUpdate(
                 req.body._id,
-                {$pull: {"users":req.body.user }},
+                {$pull: {"users":{"uid":req.body.user} }},
                 {safe: true, upsert: true, new : true},
                 function(err, vclass) {
                     console.log(err);
                     res.json(util.response(vclass));
                 }
             );
-        }else{
-            res.json(util.response(vclass,"remove User To Class error!"));
         }
     });
     
     // Update url
     app.put('/vclass/youtube', function(req, res){
+        console.log(req.body);
         if(!!req.body._id){
 
             model.VClass.schema.findByIdAndUpdate(req.body._id, { "youtubeUrl": req.body.youtubeUrl }, function(err, vclass){
@@ -135,7 +140,16 @@ var virtualClass = function(app) {
                 }
             });
         }else{
-            res.json(util.response(vclass,"update youtube URL error!"));
+            res.json(util.response({},"update youtube URL error!"));
+        }
+    });
+    
+    // access vid
+    app.get('/vclass/access/:vid', function(req, res){
+        if(!!req.params.vid){
+            model.VClass.schema.findById( req.params.vid, function(err, vclass){
+               res.json(util.response(vclass.youtubeUrl));
+            });
         }
     });
 };

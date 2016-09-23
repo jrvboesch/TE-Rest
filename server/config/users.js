@@ -30,10 +30,10 @@ module.exports = (app, User) => {
         User.findOne({ email: req.body.email }, (err, user) => {
             if (err) res.json(err);
 
-            if (!user) res.json('Usuario no existe.');
+            if (!user) res.json({ success: false, message: 'Usuario no existe.' });
 
             else
-                res.json(user.password === req.body.password ? user : 'Clave incorrecta.');
+                res.json(user.password === req.body.password ? user : { success: false, message: 'Clave incorrecta.' });
         });
     });
 

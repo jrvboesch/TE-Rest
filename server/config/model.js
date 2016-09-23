@@ -6,7 +6,12 @@ var Schema = mongoose.Schema;
     //VClass Schema Example
     VClass = Schema({
         name:     String,
-        users:    [Schema.Types.ObjectId],
+        users:  [
+                    {
+                    uid: Schema.Types.ObjectId,
+                    passcode: String
+                    }
+                ],
         teacher:    Schema.Types.ObjectId,
         CoverImg: String,
         previewImg: String,
